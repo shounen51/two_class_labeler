@@ -72,10 +72,9 @@ class btn_events():
             self.click_point = point
 
     def label_move(self, point):
-        print('move', point)
-        point = self._limit_point(point)
-        if self.LR == None:
+        if self.LR == None or not self.ui.cb_box.isChecked():
             return
+        point = self._limit_point(point)
         color = (0,0,255) if self.LR == "L" else (0,255,0)
         drew = copy.copy(self.frame)
         p1 = [self.click_point[0], self.click_point[1]]
@@ -88,6 +87,22 @@ class btn_events():
     def label_release(self, point):
         if self.LR == None:
             return
+        if self.ui.cb_box.isChecked():
+            patch = self._box_patch(point)
+        else:
+            patch = self.frame
+        dir = os.path.join(train_data, self.LR)
+        path = os.path.join(dir, self.pic_name)
+        cv2.imwrite(path, patch)
+        list_widget = self.ui.list_L if self.LR == 'L' else self.ui.list_R
+        list_widget.addItem(self.pic_name)
+        self.LR = None
+
+        if self.ui.list_pics.currentRow()+1 != self.ui.list_pics.count():
+            self.ui.list_pics.setCurrentRow(self.ui.list_pics.currentRow()+1)
+            self.list_pics_click()
+
+    def _box_patch(self, point):
         point = self._limit_point(point)
         if point[0] == self.click_point[0] or point[1] == self.click_point[1]:
             display_video(self.frame[:,:,::-1], self.ui.lab_pic) 
@@ -96,17 +111,8 @@ class btn_events():
         p2 = [max(self.click_point[0], point[0]), max(self.click_point[1], point[1])]
         ori_h, ori_w, _ = self.frame.shape
         p1, p2 = normalize_points([p1, p2], (self.ui.lab_pic.width(), self.ui.lab_pic.height()), (ori_w, ori_h))
-        pitch = self.frame[p1[1]:p2[1],p1[0]:p2[0],:]
-        dir = os.path.join(train_data, self.LR)
-        path = os.path.join(dir, self.pic_name)
-        cv2.imwrite(path, pitch)
-        list_widget = self.ui.list_L if self.LR == 'L' else self.ui.list_R
-        list_widget.addItem(self.pic_name)
-        self.LR = None
-
-        if self.ui.list_pics.currentRow()+1 != self.ui.list_pics.count():
-            self.ui.list_pics.setCurrentRow(self.ui.list_pics.currentRow()+1)
-            self.list_pics_click()
+        patch = self.frame[p1[1]:p2[1],p1[0]:p2[0],:]
+        return patch
 
     def _del_pic(self):
         try:

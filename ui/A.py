@@ -55,6 +55,11 @@ class A_form(QtWidgets.QWidget):
         self.btn_del.setFont(font)
         self.btn_del.setGeometry(QtCore.QRect(1660, 980, 251, 61))
         self.btn_del.setObjectName("pushButton_2")
+        self.cb_box = my_cb(Form)
+        self.cb_box.setFont(font)
+        self.cb_box.setGeometry(QtCore.QRect(50, 70, 200, 30))
+        self.cb_box.setObjectName("cb_box")
+        self.cb_box.setChecked(True)
 
 
         self.retranslateUi(Form)
@@ -74,5 +79,6 @@ class A_form(QtWidgets.QWidget):
         _translate = QtCore.QCoreApplication.translate
         Form.setWindowTitle(_translate("Form", "Hand in pocket 標註工具"))
         self.btn_del.setText(_translate("Form", "刪除標註"))
+        self.cb_box.setText(_translate("Form", "拉框標註"))
 
 
