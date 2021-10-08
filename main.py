@@ -28,10 +28,16 @@ class MainWindow(QMainWindow):
         self.ui = A_form(self, self, self.event)
         self.event.ui_ready(self.ui)
         self.ui.list_pics.addItems(self.data_dict.get_pics())
+        self.ui.list_L.addItems(self.data_dict.L_list)
+        self.ui.list_R.addItems(self.data_dict.R_list)
+        self.ui.lab_title.setText("pics:" + str(self.data_dict.get_pics_num()))
+        for p in self.data_dict.gray_pic:
+            items = self.ui.list_pics.findItems(p,Qt.MatchFlag.MatchExactly)
+            for item in items:
+                item.setBackground(QColor("#424242"))
         if self.ui.list_pics.count() > 0:
             self.ui.list_pics.setCurrentRow(0)
             self.event.list_pics_click()
-        self.ui.lab_title.setText("pics:" + str(self.data_dict.get_pics_num()))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
