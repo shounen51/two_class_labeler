@@ -88,6 +88,9 @@ class btn_events():
         if self.LR == None:
             return
         if self.ui.cb_box.isChecked():
+            if point[0] == self.click_point[0] or point[1] == self.click_point[1]:
+                display_video(self.frame[:,:,::-1], self.ui.lab_pic) 
+                return
             patch = self._box_patch(point)
         else:
             patch = self.frame
@@ -104,9 +107,6 @@ class btn_events():
 
     def _box_patch(self, point):
         point = self._limit_point(point)
-        if point[0] == self.click_point[0] or point[1] == self.click_point[1]:
-            display_video(self.frame[:,:,::-1], self.ui.lab_pic) 
-            return
         p1 = [min(self.click_point[0], point[0]), min(self.click_point[1], point[1])]
         p2 = [max(self.click_point[0], point[0]), max(self.click_point[1], point[1])]
         ori_h, ori_w, _ = self.frame.shape
